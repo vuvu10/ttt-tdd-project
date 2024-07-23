@@ -1,0 +1,5 @@
+const TTT = require('./class/ttt');
+const Screen = require('./class/screen');
+
+const game = new TTT();
+Screen.render();
