@@ -1,3 +1,4 @@
+const TTT = require("./ttt");
 
 class ComputerPlayer {
 
@@ -55,39 +56,38 @@ class ComputerPlayer {
   static getSmartMove(grid, symbol) {
 
     // Your code here
-      const bestMove = this.minimax(grid, symbol, symbol);
+    const bestMove = this.minimax(grid, symbol, symbol);
+    return bestMove;
+  }
+
+  static minimax(grid, player, aiPlayer, depth = 0) {
+    const opponent = player === 'X' ? 'O' : 'X';
+    const availableMoves = this.getValidMoves(grid);
+
+    const winner = TTT.checkWin(grid);
+    if (winner === aiPlayer) return { score: 10 - depth};
+    if (winner === opponent) return { score: depth - 10};
+    if (winner === 'T') return { score: 0};
+    if (availableMoves.length === 0) return { score: 0};
+
+    const moves = [];
+
+    for (let move of availableMoves) {
+      const newGrid = JSON.parse(JSON.stringify(grid));
+      newGrid[move.row][move.col] = player;
+
+      const result = this.minimax(newGrid, opponent, aiPlayer, depth + 1);
+      moves.push({ move, score: result.score});
+    }
+
+    if (player === aiPlayer) {
+      const bestMove = moves.reduce((best, move) => move.score > best.score ? move : best);
+      return depth === 0 ? bestMove.move : bestMove;
+    } else {
+      const bestMove = moves.reduce((best, move) => move.score < best.score ? move : best);
       return bestMove;
     }
-  
-    static minimax(grid, player, aiPlayer, depth = 0) {
-      const opponent = player === 'X' ? 'O' : 'X';
-      const availableMoves = this.getValidMoves(grid);
-  
-      // Check for terminal states
-      const winner = TTT.checkWin(grid);
-      if (winner === aiPlayer) return { score: 10 - depth };
-      if (winner === opponent) return { score: depth - 10 };
-      if (winner === 'T') return { score: 0 };
-      if (availableMoves.length === 0) return { score: 0 };
-  
-      const moves = [];
-  
-      for (let move of availableMoves) {
-        const newGrid = JSON.parse(JSON.stringify(grid));
-        newGrid[move.row][move.col] = player;
-  
-        const result = this.minimax(newGrid, opponent, aiPlayer, depth + 1);
-        moves.push({ move, score: result.score });
-      }
-  
-      if (player === aiPlayer) {
-        const bestMove = moves.reduce((best, move) => move.score > best.score ? move : best);
-        return depth === 0 ? bestMove.move : bestMove;
-      } else {
-        const bestMove = moves.reduce((best, move) => move.score < best.score ? move : best);
-        return bestMove;
-      }
-    }
+  }
 
 }
 
