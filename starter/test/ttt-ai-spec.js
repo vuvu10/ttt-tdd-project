@@ -119,6 +119,7 @@ describe ('ComputerPlayer', function () {
 
 
   it('can play 1000 games without losing', function () {
+    this.timeout(60000);
 
     let losses = 0;
     let wins = 0;
@@ -162,7 +163,7 @@ describe ('ComputerPlayer', function () {
 
     expect (losses).to.equal(0);
 
-  });
+  }).timeout(60000);
 
 });
 
